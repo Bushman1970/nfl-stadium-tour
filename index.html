@@ -24,7 +24,7 @@
   .pbig{font-size:40px;font-weight:800;line-height:1}
   .pbig small{font-size:18px;font-weight:500;color:#aeb9d4}
   .bar{height:12px;border-radius:99px;background:rgba(255,255,255,.16);overflow:hidden;margin:14px 0 8px}
-  .bar > i{display:block;height:100%;width:25%;background:linear-gradient(90deg,#2bbd86,#1b7f5a)}
+  .bar > i{display:block;height:100%;width:28%;background:linear-gradient(90deg,#2bbd86,#1b7f5a)}
   .pmeta{display:flex;justify-content:space-between;color:#aeb9d4;font-size:13px}
 
   section{padding:40px 0}
@@ -83,9 +83,9 @@
     <h1>Bush Family NFL Stadium Tour</h1>
     <p class="sub">One game in every NFL stadium.</p>
     <div class="progress-card">
-      <div class="pbig">8 <small>of 32 stadiums</small></div>
+      <div class="pbig">9 <small>of 32 stadiums</small></div>
       <div class="bar"><i></i></div>
-      <div class="pmeta"><span>25% complete</span><span>24 to go</span></div>
+      <div class="pmeta"><span>28% complete</span><span>23 to go</span></div>
     </div>
   </div>
 </header>
@@ -97,10 +97,10 @@
     <div id="map-wrap">
       <div id="map" style="width:100%"></div>
       <div class="legend">
-        <span><i class="dot v"></i> Visited (8)</span>
-        <span><i class="dot r"></i> Still to go (24)</span>
+        <span><i class="dot v"></i> Visited (9)</span>
+        <span><i class="dot r"></i> Still to go (23)</span>
       </div>
-      <div id="tip">Florida is home turf — 3 of the first 8 were in-state.</div>
+      <div id="tip">Florida is home turf — 3 of the first 9 were in-state.</div>
     </div>
   </div>
 </section>
@@ -116,7 +116,7 @@
 <section id="togo">
   <div class="wrap">
     <h2>Still to go</h2>
-    <p class="lead">24 stadiums left — mostly the West Coast, the Northeast corridor, and the upper Midwest.</p>
+    <p class="lead">23 stadiums left — mostly the West Coast, the Northeast corridor, and the upper Midwest.</p>
     <div class="remaining" id="remaining"></div>
   </div>
 </section>
@@ -153,6 +153,9 @@ const visited = [
   {team:"Houston Texans", stadium:"NRG Stadium", city:"Houston, TX", date:"Dec 15, 2024", score:"Texans 20, Dolphins 12", lon:-95.4107, lat:29.6847, badge:"Back-to-back champs",
    moment:"A defensive clinic — cornerback Derek Stingley Jr. intercepted Tua Tagovailoa twice in the fourth quarter, capping a four-takeaway day, to help clinch back-to-back AFC South titles.",
    season:"Houston went 10–7, won the division, beat the Chargers 32–12 in the wild-card round, and lost a divisional-round game to the Chiefs."},
+  {team:"Tennessee Titans", stadium:"Nissan Stadium", city:"Nashville, TN", date:"Nov 2, 2025", score:"Chargers 27, Titans 20", lon:-86.7713, lat:36.1665, badge:"Fast start, tough finish",
+   moment:"A wild first quarter — the Titans scored twice before their offense did anything. Cody Barton picked off Justin Herbert on the Chargers' second snap and ran it back 24 yards, then Chimere Dike broke a 67-yard punt-return touchdown (Tennessee's first since 2012) for a 14–7 lead. The defense sacked Herbert six times and the Chargers lost both starting tackles — but Herbert answered with 250 yards, two TD throws, and a baseball-slide rushing score, including a back-breaking 99-yard drive after Tony Pollard was stuffed at the LA one.",
+   season:"A 3–14 wreck and a 1–11 start — the franchise's worst since the 1994 Houston Oilers, with coach Brian Callahan fired at 1–5. The bright spot was rookie #1 overall pick Cam Ward, who broke Marcus Mariota's franchise rookie passing record (3,117 yards)."},
   {team:"Atlanta Falcons", stadium:"Mercedes-Benz Stadium", city:"Atlanta, GA", date:"Dec 29, 2025", score:"Falcons 27, Rams 24", lon:-84.4009, lat:33.7554, badge:"Newest stadium",
    moment:"A Monday Night Football thriller. Bijan Robinson stole the show with 195 rushing yards, including a 93-yard touchdown, as Atlanta raced to a 21–0 halftime lead. The Rams clawed all the way back to tie it 24–24 late (Matthew Stafford to Puka Nacua), but kicker Zane Gonzalez answered with a 51-yard field goal to win it.",
    season:"Atlanta finished 8–9 — a 3–2 start, a 1–7 collapse, then four straight wins to close (this was win #3 of that run) — but missed the playoffs for an eighth straight year. Coach Raheem Morris was fired after the finale, while Bijan Robinson set a franchise single-season scrimmage-yards record."}
@@ -181,7 +184,6 @@ const remaining = [
   {team:"Philadelphia Eagles", stadium:"Lincoln Financial Field", city:"Philadelphia, PA", lon:-75.1675, lat:39.9008},
   {team:"San Francisco 49ers", stadium:"Levi's Stadium", city:"Santa Clara, CA", lon:-121.9698, lat:37.4030},
   {team:"Seattle Seahawks", stadium:"Lumen Field", city:"Seattle, WA", lon:-122.3316, lat:47.5952},
-  {team:"Tennessee Titans", stadium:"Nissan Stadium", city:"Nashville, TN", lon:-86.7713, lat:36.1665},
   {team:"Washington Commanders", stadium:"Northwest Stadium", city:"Landover, MD", lon:-76.8645, lat:38.9077}
 ];
 
@@ -192,7 +194,8 @@ const sources = [
   ["Vikings/Bears 2023","https://www.espn.com/nfl/boxscore/_/gameId/401547475"],
   ["Dolphins/Cowboys 2023","https://www.espn.com/nfl/recap/_/gameId/401547620"],
   ["Lions/Cowboys 2024 + Hutchinson injury","https://sports.yahoo.com/aidan-hutchinson-injury-lions-suffers-223051702.html"],
-  ["Texans/Dolphins 2024","https://www.espn.com/nfl/game/_/gameId/401671860/dolphins-texans"]
+  ["Texans/Dolphins 2024","https://www.espn.com/nfl/game/_/gameId/401671860/dolphins-texans"],
+  ["Chargers/Titans 2025","https://www.espn.com/nfl/game/_/gameId/401772764/chargers-titans"]
 ];
 
 // Memory cards
@@ -226,7 +229,7 @@ document.getElementById("srclist").innerHTML = "Sources: " + sources.map(s=>`<a 
   const tipDefault = tip.textContent;
   const svg = d3.select("#map").append("svg")
     .attr("viewBox","0 0 900 540").attr("width","100%")
-    .attr("role","img").attr("aria-label","Map of the United States showing 7 visited NFL stadiums and 25 remaining");
+    .attr("role","img").attr("aria-label","Map of the United States showing 9 visited NFL stadiums and 23 remaining");
   const projection = d3.geoAlbersUsa().scale(1120).translate([450,270]);
   const path = d3.geoPath(projection);
 
