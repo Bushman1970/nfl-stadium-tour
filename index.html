@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Bush Family NFL Stadium Tour</title>
+<meta name="description" content="One game in every NFL stadium — the Bush family's progress, with a memory from every visit." />
+<style>
+  :root{
+    --navy:#0c1733; --navy2:#16244a; --ink:#1a2233; --muted:#5b6577;
+    --line:#e4e7ee; --bg:#f6f7f9; --card:#ffffff;
+    --green:#1b7f5a; --green-soft:#e7f3ee; --gold:#c9a23b; --gray:#9aa0a6;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:var(--ink);background:var(--bg);line-height:1.6;-webkit-font-smoothing:antialiased}
+  a{color:var(--green)}
+  .wrap{max-width:1040px;margin:0 auto;padding:0 20px}
+
+  header.hero{background:linear-gradient(160deg,var(--navy),var(--navy2));color:#fff;padding:54px 0 40px;text-align:center}
+  .hero h1{margin:0 0 6px;font-size:34px;letter-spacing:.3px;font-weight:700}
+  .hero .sub{margin:0;color:#aeb9d4;font-size:17px}
+  .progress-card{max-width:560px;margin:30px auto 0;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);border-radius:16px;padding:20px 22px}
+  .pbig{font-size:40px;font-weight:800;line-height:1}
+  .pbig small{font-size:18px;font-weight:500;color:#aeb9d4}
+  .bar{height:12px;border-radius:99px;background:rgba(255,255,255,.16);overflow:hidden;margin:14px 0 8px}
+  .bar > i{display:block;height:100%;width:21.9%;background:linear-gradient(90deg,#2bbd86,#1b7f5a)}
+  .pmeta{display:flex;justify-content:space-between;color:#aeb9d4;font-size:13px}
+
+  section{padding:40px 0}
+  h2{font-size:24px;margin:0 0 4px;color:var(--navy)}
+  .lead{color:var(--muted);margin:0 0 22px;font-size:15px}
+
+  #map-wrap{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px}
+  .legend{display:flex;gap:20px;flex-wrap:wrap;font-size:13px;color:var(--muted);justify-content:center;margin-top:6px}
+  .legend span{display:inline-flex;align-items:center;gap:7px}
+  .dot{width:13px;height:13px;border-radius:50%;display:inline-block}
+  .dot.v{background:var(--green)}
+  .dot.r{background:#fff;border:2px solid var(--gray)}
+  #tip{height:22px;text-align:center;color:var(--muted);font-size:13px;margin-top:8px}
+
+  .cards{display:grid;grid-template-columns:1fr;gap:18px}
+  @media(min-width:720px){.cards{grid-template-columns:1fr 1fr}}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:16px;overflow:hidden;display:flex;flex-direction:column}
+  .card .top{background:var(--navy);color:#fff;padding:16px 18px;position:relative}
+  .card .stadium{font-size:18px;font-weight:700;margin:0}
+  .card .teamcity{margin:2px 0 0;color:#aeb9d4;font-size:13px}
+  .card .badge{position:absolute;top:14px;right:14px;background:var(--gold);color:#241c02;font-size:11px;font-weight:700;padding:3px 9px;border-radius:99px;text-transform:uppercase;letter-spacing:.4px}
+  .card .body{padding:16px 18px;display:flex;flex-direction:column;gap:12px;flex:1}
+  .scoreline{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  .score{background:var(--green-soft);color:var(--green);font-weight:700;padding:4px 11px;border-radius:8px;font-size:14px}
+  .date{color:var(--muted);font-size:13px}
+  .blk h4{margin:0 0 2px;font-size:12px;letter-spacing:.5px;text-transform:uppercase;color:var(--gold);font-weight:700}
+  .blk p{margin:0;font-size:14.5px}
+
+  .remaining{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px}
+  .rchip{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 12px}
+  .rchip b{font-size:14px;font-weight:600;color:var(--ink);display:block}
+  .rchip span{font-size:12px;color:var(--muted)}
+
+  footer{background:var(--navy);color:#aeb9d4;padding:30px 0 40px;font-size:13px;text-align:center}
+  footer a{color:#8fd3b8}
+  footer .src{max-width:780px;margin:10px auto 0;line-height:1.9}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <h1>Bush Family NFL Stadium Tour</h1>
+    <p class="sub">One game in every NFL stadium.</p>
+    <div class="progress-card">
+      <div class="pbig">7 <small>of 32 stadiums</small></div>
+      <div class="bar"><i></i></div>
+      <div class="pmeta"><span>22% complete</span><span>25 to go</span></div>
+    </div>
+  </div>
+</header>
+
+<section id="map-section">
+  <div class="wrap">
+    <h2>The map</h2>
+    <p class="lead">Green is done, gray is still on the list. Hover a stadium for the matchup.</p>
+    <div id="map-wrap">
+      <div id="map" style="width:100%"></div>
+      <div class="legend">
+        <span><i class="dot v"></i> Visited (7)</span>
+        <span><i class="dot r"></i> Still to go (25)</span>
+      </div>
+      <div id="tip">Florida is home turf — 3 of the first 7 were in-state.</div>
+    </div>
+  </div>
+</section>
+
+<section id="memories">
+  <div class="wrap">
+    <h2>The memories</h2>
+    <p class="lead">One moment worth retelling from every visit, in the order we saw them.</p>
+    <div class="cards" id="cards"></div>
+  </div>
+</section>
+
+<section id="togo">
+  <div class="wrap">
+    <h2>Still to go</h2>
+    <p class="lead">25 stadiums left — mostly the West Coast, the Northeast corridor, and the upper Midwest.</p>
+    <div class="remaining" id="remaining"></div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    Made for the Bush family · Game facts researched June 2026 (ESPN, NFL.com, Wikipedia, team sites).
+    <div class="src" id="srclist"></div>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+<script src="https://cdn.jsdelivr.net/npm/topojson-client@3"></script>
+<script>
+const visited = [
+  {team:"Jacksonville Jaguars", stadium:"EverBank Field", city:"Jacksonville, FL", date:"Oct 26, 2014", score:"Dolphins 27, Jaguars 13", lon:-81.6376, lat:30.3239, badge:"Where it started",
+   moment:"Rookie #3 overall pick Blake Bortles threw two pick-sixes (81 and 22 yards) — the first quarterback since Geno Smith to give up two in one game. RB Denard Robinson's 108 rushing yards was the bright spot.",
+   season:"The Jaguars went 3–13, deep in a rebuild under Gus Bradley. It was the “before” picture of the Bortles–Robinson–Hurns core that nearly reached the Super Bowl three years later."},
+  {team:"Pittsburgh Steelers", stadium:"Heinz Field", city:"Pittsburgh, PA", date:"Oct 10, 2021", score:"Steelers 27, Broncos 19", lon:-80.0157, lat:40.4468, badge:"Levi's 15th 🎂",
+   moment:"Rookie Najee Harris broke out (122 yards, TD) and Ben Roethlisberger, in his farewell season, had one of his cleanest games (253 yards, 2 TD, 0 INT). James Pierre sealed it with a late end-zone interception.",
+   season:"Pittsburgh finished 9–7–1 and snuck into the playoffs for Big Ben's final ride, ending in a first-round loss at Kansas City."},
+  {team:"Tampa Bay Buccaneers", stadium:"Raymond James Stadium", city:"Tampa, FL", date:"Oct 9, 2022", score:"Buccaneers 21, Falcons 15", lon:-82.5033, lat:27.9759, badge:"Saw the GOAT",
+   moment:"Tom Brady, in his final NFL season, threw for 351 yards and Leonard Fournette scored both touchdowns. The game ended on one of the most-debated calls of 2022 — a roughing-the-passer flag on Atlanta's Grady Jarrett that let Tampa run out the clock.",
+   season:"An odd year: 8–9, yet still good enough to win the NFC South and host a playoff game. Brady set the single-season completions record (490) and retired that February."},
+  {team:"Chicago Bears", stadium:"Soldier Field", city:"Chicago, IL", date:"Oct 15, 2023", score:"Vikings 19, Bears 13", lon:-87.6167, lat:41.8623, badge:"Historic Soldier Field",
+   moment:"A gritty NFC North grind on the Chicago lakefront. The turning point: Bears QB Justin Fields dislocated his throwing thumb on a Danielle Hunter sack, opening the door for undrafted Division-II rookie Tyson Bagent to make his NFL debut.",
+   season:"Chicago went 7–10 and finished last in the division — but a clear step up from the prior year's 3–14, with the rebuild starting to find its footing."},
+  {team:"Miami Dolphins", stadium:"Hard Rock Stadium", city:"Miami Gardens, FL", date:"Dec 24, 2023", score:"Dolphins 22, Cowboys 20", lon:-80.2389, lat:25.9580, badge:"Christmas Eve walk-off 🎄",
+   moment:"A Christmas Eve walk-off. Kicker Jason Sanders went a perfect 5-for-5, including a 57-yard career long, and drilled the game-winner as time expired to beat a 10-win Cowboys team and clinch a playoff spot.",
+   season:"Miami finished 11–6 with a high-flying Mike McDaniel offense, then lost in the wild-card round at Kansas City in one of the coldest games in NFL history."},
+  {team:"Dallas Cowboys", stadium:"AT&T Stadium", city:"Arlington, TX", date:"Oct 13, 2024", score:"Lions 47, Cowboys 9", lon:-97.0945, lat:32.7473, badge:"Jerry World",
+   moment:"The visiting Lions rolled 47–9, the worst Dallas home loss since 1988. But the moment that stuck was a frightening one: Lions star edge rusher Aidan Hutchinson — leading the NFL in pressures — snapped his lower leg while sacking Dak Prescott, his leg clipping teammate Alim McNeill. He was carted off, had surgery that night, and was lost for the rest of the regular season.",
+   season:"A disappointing 7–10 for Dallas, with Dak Prescott himself later lost to a season-ending injury — while the Lions powered on to the NFC's #1 seed at 15–2."},
+  {team:"Houston Texans", stadium:"NRG Stadium", city:"Houston, TX", date:"Dec 15, 2024", score:"Texans 20, Dolphins 12", lon:-95.4107, lat:29.6847, badge:"Most recent",
+   moment:"A defensive clinic — cornerback Derek Stingley Jr. intercepted Tua Tagovailoa twice in the fourth quarter, capping a four-takeaway day, to help clinch back-to-back AFC South titles.",
+   season:"Houston went 10–7, won the division, beat the Chargers 32–12 in the wild-card round, and lost a divisional-round game to the Chiefs."}
+];
+
+const remaining = [
+  {team:"Arizona Cardinals", stadium:"State Farm Stadium", city:"Glendale, AZ", lon:-112.2625, lat:33.5276},
+  {team:"Atlanta Falcons", stadium:"Mercedes-Benz Stadium", city:"Atlanta, GA", lon:-84.4009, lat:33.7554},
+  {team:"Baltimore Ravens", stadium:"M&T Bank Stadium", city:"Baltimore, MD", lon:-76.6227, lat:39.2780},
+  {team:"Buffalo Bills", stadium:"Highmark Stadium", city:"Orchard Park, NY", lon:-78.7870, lat:42.7738},
+  {team:"Carolina Panthers", stadium:"Bank of America Stadium", city:"Charlotte, NC", lon:-80.8528, lat:35.2258},
+  {team:"Cincinnati Bengals", stadium:"Paycor Stadium", city:"Cincinnati, OH", lon:-84.5160, lat:39.0955},
+  {team:"Cleveland Browns", stadium:"Huntington Bank Field", city:"Cleveland, OH", lon:-81.6995, lat:41.5061},
+  {team:"Denver Broncos", stadium:"Empower Field", city:"Denver, CO", lon:-105.0201, lat:39.7439},
+  {team:"Detroit Lions", stadium:"Ford Field", city:"Detroit, MI", lon:-83.0456, lat:42.3400},
+  {team:"Green Bay Packers", stadium:"Lambeau Field", city:"Green Bay, WI", lon:-88.0623, lat:44.5013},
+  {team:"Indianapolis Colts", stadium:"Lucas Oil Stadium", city:"Indianapolis, IN", lon:-86.1639, lat:39.7601},
+  {team:"Kansas City Chiefs", stadium:"Arrowhead Stadium", city:"Kansas City, MO", lon:-94.4839, lat:39.0489},
+  {team:"Las Vegas Raiders", stadium:"Allegiant Stadium", city:"Las Vegas, NV", lon:-115.1833, lat:36.0909},
+  {team:"Los Angeles Chargers", stadium:"SoFi Stadium", city:"Inglewood, CA", lon:-118.3392, lat:33.9535, dx:-7},
+  {team:"Los Angeles Rams", stadium:"SoFi Stadium", city:"Inglewood, CA", lon:-118.3392, lat:33.9535, dx:7},
+  {team:"Minnesota Vikings", stadium:"U.S. Bank Stadium", city:"Minneapolis, MN", lon:-93.2581, lat:44.9737},
+  {team:"New England Patriots", stadium:"Gillette Stadium", city:"Foxborough, MA", lon:-71.2643, lat:42.0909},
+  {team:"New Orleans Saints", stadium:"Caesars Superdome", city:"New Orleans, LA", lon:-90.0812, lat:29.9511},
+  {team:"New York Giants", stadium:"MetLife Stadium", city:"East Rutherford, NJ", lon:-74.0745, lat:40.8135, dx:-7},
+  {team:"New York Jets", stadium:"MetLife Stadium", city:"East Rutherford, NJ", lon:-74.0745, lat:40.8135, dx:7},
+  {team:"Philadelphia Eagles", stadium:"Lincoln Financial Field", city:"Philadelphia, PA", lon:-75.1675, lat:39.9008},
+  {team:"San Francisco 49ers", stadium:"Levi's Stadium", city:"Santa Clara, CA", lon:-121.9698, lat:37.4030},
+  {team:"Seattle Seahawks", stadium:"Lumen Field", city:"Seattle, WA", lon:-122.3316, lat:47.5952},
+  {team:"Tennessee Titans", stadium:"Nissan Stadium", city:"Nashville, TN", lon:-86.7713, lat:36.1665},
+  {team:"Washington Commanders", stadium:"Northwest Stadium", city:"Landover, MD", lon:-76.8645, lat:38.9077}
+];
+
+const sources = [
+  ["Jaguars/Dolphins 2014","https://www.espn.com/nfl/recap/_/gameId/400554267"],
+  ["Steelers/Broncos 2021","https://www.espn.com/nfl/game/_/gameId/401326401/broncos-steelers"],
+  ["Buccaneers/Falcons 2022","https://www.espn.com/nfl/game/_/gameId/401437770"],
+  ["Vikings/Bears 2023","https://www.espn.com/nfl/boxscore/_/gameId/401547475"],
+  ["Dolphins/Cowboys 2023","https://www.espn.com/nfl/recap/_/gameId/401547620"],
+  ["Lions/Cowboys 2024 + Hutchinson injury","https://sports.yahoo.com/aidan-hutchinson-injury-lions-suffers-223051702.html"],
+  ["Texans/Dolphins 2024","https://www.espn.com/nfl/game/_/gameId/401671860/dolphins-texans"]
+];
+
+// Memory cards
+document.getElementById("cards").innerHTML = visited.map(v => `
+  <article class="card">
+    <div class="top">
+      <span class="badge">${v.badge}</span>
+      <p class="stadium">${v.stadium}</p>
+      <p class="teamcity">${v.team} · ${v.city}</p>
+    </div>
+    <div class="body">
+      <div class="scoreline"><span class="score">${v.score}</span><span class="date">${v.date}</span></div>
+      <div class="blk"><h4>The moment</h4><p>${v.moment}</p></div>
+      <div class="blk"><h4>That season</h4><p>${v.season}</p></div>
+    </div>
+  </article>`).join("");
+
+// Remaining chips
+document.getElementById("remaining").innerHTML = remaining
+  .filter((d,i)=>!(d.stadium==="SoFi Stadium" && d.team==="Los Angeles Rams") && !(d.stadium==="MetLife Stadium" && d.team==="New York Jets"))
+  .map(d => `<div class="rchip"><b>${d.team}</b><span>${d.stadium} · ${d.city}</span></div>`).join("")
+  + `<div class="rchip"><b>Los Angeles Rams</b><span>SoFi Stadium · Inglewood, CA</span></div>`
+  + `<div class="rchip"><b>New York Jets</b><span>MetLife Stadium · East Rutherford, NJ</span></div>`;
+
+// Sources
+document.getElementById("srclist").innerHTML = "Sources: " + sources.map(s=>`<a href="${s[1]}" target="_blank" rel="noopener">${s[0]}</a>`).join(" · ");
+
+// Map
+(function(){
+  const tip = document.getElementById("tip");
+  const tipDefault = tip.textContent;
+  const svg = d3.select("#map").append("svg")
+    .attr("viewBox","0 0 900 540").attr("width","100%")
+    .attr("role","img").attr("aria-label","Map of the United States showing 7 visited NFL stadiums and 25 remaining");
+  const projection = d3.geoAlbersUsa().scale(1120).translate([450,270]);
+  const path = d3.geoPath(projection);
+
+  d3.json("https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json").then(us=>{
+    svg.append("g").selectAll("path")
+      .data(topojson.feature(us, us.objects.states).features).join("path")
+      .attr("d",path).attr("fill","#e8eaee").attr("stroke","#fff").attr("stroke-width",0.8);
+
+    function plot(arr, isV){
+      svg.append("g").selectAll("circle").data(arr).join("circle")
+        .attr("cx",d=>{const p=projection([d.lon,d.lat]);return p?p[0]+(d.dx||0):-100;})
+        .attr("cy",d=>{const p=projection([d.lon,d.lat]);return p?p[1]:-100;})
+        .attr("r",isV?7:5)
+        .attr("fill",isV?"#1b7f5a":"#fff")
+        .attr("stroke",isV?"#fff":"#9aa0a6")
+        .attr("stroke-width",isV?1.5:1.5)
+        .style("cursor","pointer")
+        .on("mouseenter mousemove",function(e,d){
+          d3.select(this).attr("r",isV?9:7);
+          tip.innerHTML = `<b style="color:#1a2233">${d.team}</b> · ${d.stadium}` + (isV?` — ${d.score} (${d.date})`:` — not yet`);
+        })
+        .on("mouseleave",function(){d3.select(this).attr("r",isV?7:5);tip.innerHTML=tipDefault;})
+        .append("title").text(d=>`${d.team} — ${d.stadium}${isV?" ✓":""}`);
+    }
+    plot(remaining,false);
+    plot(visited,true);
+  }).catch(()=>{document.getElementById("map").innerHTML='<p style="text-align:center;color:#5b6577;padding:20px">Map could not load — the memories below tell the whole story.</p>';});
+})();
+</script>
+</body>
+</html>
