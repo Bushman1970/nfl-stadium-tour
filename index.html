@@ -24,7 +24,7 @@
   .pbig{font-size:40px;font-weight:800;line-height:1}
   .pbig small{font-size:18px;font-weight:500;color:#aeb9d4}
   .bar{height:12px;border-radius:99px;background:rgba(255,255,255,.16);overflow:hidden;margin:14px 0 8px}
-  .bar > i{display:block;height:100%;width:21.9%;background:linear-gradient(90deg,#2bbd86,#1b7f5a)}
+  .bar > i{display:block;height:100%;width:25%;background:linear-gradient(90deg,#2bbd86,#1b7f5a)}
   .pmeta{display:flex;justify-content:space-between;color:#aeb9d4;font-size:13px}
 
   section{padding:40px 0}
@@ -83,9 +83,9 @@
     <h1>Bush Family NFL Stadium Tour</h1>
     <p class="sub">One game in every NFL stadium.</p>
     <div class="progress-card">
-      <div class="pbig">7 <small>of 32 stadiums</small></div>
+      <div class="pbig">8 <small>of 32 stadiums</small></div>
       <div class="bar"><i></i></div>
-      <div class="pmeta"><span>22% complete</span><span>25 to go</span></div>
+      <div class="pmeta"><span>25% complete</span><span>24 to go</span></div>
     </div>
   </div>
 </header>
@@ -97,10 +97,10 @@
     <div id="map-wrap">
       <div id="map" style="width:100%"></div>
       <div class="legend">
-        <span><i class="dot v"></i> Visited (7)</span>
-        <span><i class="dot r"></i> Still to go (25)</span>
+        <span><i class="dot v"></i> Visited (8)</span>
+        <span><i class="dot r"></i> Still to go (24)</span>
       </div>
-      <div id="tip">Florida is home turf — 3 of the first 7 were in-state.</div>
+      <div id="tip">Florida is home turf — 3 of the first 8 were in-state.</div>
     </div>
   </div>
 </section>
@@ -116,7 +116,7 @@
 <section id="togo">
   <div class="wrap">
     <h2>Still to go</h2>
-    <p class="lead">25 stadiums left — mostly the West Coast, the Northeast corridor, and the upper Midwest.</p>
+    <p class="lead">24 stadiums left — mostly the West Coast, the Northeast corridor, and the upper Midwest.</p>
     <div class="remaining" id="remaining"></div>
   </div>
 </section>
@@ -150,14 +150,16 @@ const visited = [
   {team:"Dallas Cowboys", stadium:"AT&T Stadium", city:"Arlington, TX", date:"Oct 13, 2024", score:"Lions 47, Cowboys 9", lon:-97.0945, lat:32.7473, badge:"Jerry World",
    moment:"The visiting Lions rolled 47–9, the worst Dallas home loss since 1988. But the moment that stuck was a frightening one: Lions star edge rusher Aidan Hutchinson — leading the NFL in pressures — snapped his lower leg while sacking Dak Prescott, his leg clipping teammate Alim McNeill. He was carted off, had surgery that night, and was lost for the rest of the regular season.",
    season:"A disappointing 7–10 for Dallas, with Dak Prescott himself later lost to a season-ending injury — while the Lions powered on to the NFC's #1 seed at 15–2."},
-  {team:"Houston Texans", stadium:"NRG Stadium", city:"Houston, TX", date:"Dec 15, 2024", score:"Texans 20, Dolphins 12", lon:-95.4107, lat:29.6847, badge:"Most recent",
+  {team:"Houston Texans", stadium:"NRG Stadium", city:"Houston, TX", date:"Dec 15, 2024", score:"Texans 20, Dolphins 12", lon:-95.4107, lat:29.6847, badge:"Back-to-back champs",
    moment:"A defensive clinic — cornerback Derek Stingley Jr. intercepted Tua Tagovailoa twice in the fourth quarter, capping a four-takeaway day, to help clinch back-to-back AFC South titles.",
-   season:"Houston went 10–7, won the division, beat the Chargers 32–12 in the wild-card round, and lost a divisional-round game to the Chiefs."}
+   season:"Houston went 10–7, won the division, beat the Chargers 32–12 in the wild-card round, and lost a divisional-round game to the Chiefs."},
+  {team:"Atlanta Falcons", stadium:"Mercedes-Benz Stadium", city:"Atlanta, GA", date:"Dec 29, 2025", score:"Falcons 27, Rams 24", lon:-84.4009, lat:33.7554, badge:"Newest stadium",
+   moment:"A Monday Night Football thriller. Bijan Robinson stole the show with 195 rushing yards, including a 93-yard touchdown, as Atlanta raced to a 21–0 halftime lead. The Rams clawed all the way back to tie it 24–24 late (Matthew Stafford to Puka Nacua), but kicker Zane Gonzalez answered with a 51-yard field goal to win it.",
+   season:"Atlanta finished 8–9 — a 3–2 start, a 1–7 collapse, then four straight wins to close (this was win #3 of that run) — but missed the playoffs for an eighth straight year. Coach Raheem Morris was fired after the finale, while Bijan Robinson set a franchise single-season scrimmage-yards record."}
 ];
 
 const remaining = [
   {team:"Arizona Cardinals", stadium:"State Farm Stadium", city:"Glendale, AZ", lon:-112.2625, lat:33.5276},
-  {team:"Atlanta Falcons", stadium:"Mercedes-Benz Stadium", city:"Atlanta, GA", lon:-84.4009, lat:33.7554},
   {team:"Baltimore Ravens", stadium:"M&T Bank Stadium", city:"Baltimore, MD", lon:-76.6227, lat:39.2780},
   {team:"Buffalo Bills", stadium:"Highmark Stadium", city:"Orchard Park, NY", lon:-78.7870, lat:42.7738},
   {team:"Carolina Panthers", stadium:"Bank of America Stadium", city:"Charlotte, NC", lon:-80.8528, lat:35.2258},

@@ -2,7 +2,7 @@
 
 A single-page family scrapbook tracking our goal: **attend an NFL game at every team's home stadium.**
 
-**Status:** 7 of 32 stadiums visited (~22%). The page shows an interactive US map, a progress bar, a memory from every visit, and the stadiums still to go.
+**Status:** 8 of 32 stadiums visited (25%). The page shows an interactive US map, a progress bar, a memory from every visit, and the stadiums still to go.
 
 ## Visited so far
 
@@ -15,6 +15,7 @@ A single-page family scrapbook tracking our goal: **attend an NFL game at every 
 | Dec 24, 2023 | Hard Rock — Miami | Dolphins 22, Cowboys 20 |
 | Oct 13, 2024 | AT&T Stadium — Dallas | Lions 47, Cowboys 9 |
 | Dec 15, 2024 | NRG Stadium — Houston | Texans 20, Dolphins 12 |
+| Dec 29, 2025 | Mercedes-Benz Stadium — Atlanta | Falcons 27, Rams 24 (Bijan Robinson 195 rush yds, 93-yd TD) |
 
 ## How it's built
 
