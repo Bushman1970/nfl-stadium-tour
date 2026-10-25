@@ -37,7 +37,7 @@
   .dot{width:13px;height:13px;border-radius:50%;display:inline-block}
   .dot.v{background:var(--green)}
   .dot.r{background:#fff;border:2px solid var(--gray)}
-  #tip{height:22px;text-align:center;color:var(--muted);font-size:13px;margin-top:8px}
+  #tip{min-height:22px;text-align:center;color:var(--muted);font-size:13px;margin-top:8px}
 
   .cards{display:grid;grid-template-columns:1fr;gap:18px}
   @media(min-width:720px){.cards{grid-template-columns:1fr 1fr}}
@@ -74,8 +74,15 @@
   .btn{font:inherit;font-size:14px;font-weight:600;color:var(--navy);background:var(--card);border:1px solid var(--line);border-radius:99px;padding:8px 16px;cursor:pointer}
   .btn:hover{border-color:var(--green);color:var(--green)}
   .btn:focus-visible,.trow:focus-visible{outline:2px solid var(--green);outline-offset:2px}
-  #matrix{margin-top:18px}
-  #matrix[hidden]{display:none}
+  #map-wrap + #matrix{margin-top:18px}
+  #map-wrap[hidden],#matrix[hidden]{display:none}
+  .viewhead{display:flex;justify-content:space-between;align-items:flex-end;gap:12px 20px;flex-wrap:wrap;margin-bottom:18px}
+  .viewhead .lead{margin:0}
+  .seg{display:inline-flex;background:var(--card);border:1px solid var(--line);border-radius:99px;padding:3px}
+  .seg button{font:inherit;font-size:14px;font-weight:600;color:var(--muted);background:none;border:0;border-radius:99px;padding:7px 16px;cursor:pointer}
+  .seg button:hover{color:var(--navy)}
+  .seg button[aria-pressed="true"]{background:var(--navy);color:#fff}
+  .seg button:focus-visible{outline:2px solid var(--green);outline-offset:2px}
   .confs{display:grid;grid-template-columns:1fr;gap:18px}
   @media(min-width:860px){.confs{grid-template-columns:1fr 1fr}}
   .conf{--cc:var(--navy);--cc-soft:var(--bg);background:var(--card);border:1px solid var(--line);border-radius:16px;padding:0 18px 16px;overflow:hidden}
@@ -119,8 +126,17 @@
 
 <section id="map-section">
   <div class="wrap">
-    <h2>The map</h2>
-    <p class="lead">Green is done, gray is still on the list. Tap a green stadium to see its memory.</p>
+    <div class="viewhead">
+      <div>
+        <h2>The tour</h2>
+        <p class="lead" id="viewlead"></p>
+      </div>
+      <div class="seg" role="group" aria-label="Choose what to show">
+        <button type="button" data-view="map">Map</button>
+        <button type="button" data-view="list">Checklist</button>
+        <button type="button" data-view="both">Both</button>
+      </div>
+    </div>
     <div id="map-wrap">
       <div id="map" style="width:100%"></div>
       <div class="legend">
@@ -129,15 +145,7 @@
       </div>
       <div id="tip">Florida is home turf — 3 of the first 10 were in-state.</div>
     </div>
-  </div>
-</section>
-
-<section id="checklist" style="padding-top:0">
-  <div class="wrap">
-    <h2>The checklist</h2>
-    <p class="lead">Every team by conference and division. Tap a checked team to see its memory.</p>
-    <button class="btn" id="matrix-toggle" aria-expanded="false" aria-controls="matrix">Show team checklist</button>
-    <div id="matrix" hidden></div>
+    <div id="matrix"></div>
   </div>
 </section>
 
@@ -317,12 +325,26 @@ matrix.addEventListener("click",e=>{
   const b = e.target.closest("button.trow");
   if(b) selectTeam(b.dataset.team);
 });
-const toggle = document.getElementById("matrix-toggle");
-toggle.addEventListener("click",()=>{
-  matrix.hidden = !matrix.hidden;
-  toggle.setAttribute("aria-expanded", String(!matrix.hidden));
-  toggle.textContent = matrix.hidden ? "Show team checklist" : "Hide team checklist";
-});
+
+// View switch: map, checklist, or both (remembered per browser)
+const leads = {
+  map:"Green is done, gray is still on the list. Tap a green stadium to see its memory.",
+  list:"Every team by conference and division. Tap a checked team to see its memory.",
+  both:"The map and the checklist together. Tap any green stadium or checked team to see its memory."
+};
+const segBtns = [...document.querySelectorAll(".seg button")];
+function setView(view){
+  if(!leads[view]) view = "both";
+  document.getElementById("map-wrap").hidden = view==="list";
+  matrix.hidden = view==="map";
+  document.getElementById("viewlead").textContent = leads[view];
+  segBtns.forEach(b=>b.setAttribute("aria-pressed", String(b.dataset.view===view)));
+  try{ localStorage.setItem("tourView", view); }catch(e){}
+}
+segBtns.forEach(b=>b.addEventListener("click",()=>setView(b.dataset.view)));
+let savedView = "both";
+try{ savedView = localStorage.getItem("tourView") || "both"; }catch(e){}
+setView(savedView);
 
 // Sources
 document.getElementById("srclist").innerHTML = "Sources: " + sources.map(s=>`<a href="${s[1]}" target="_blank" rel="noopener">${s[0]}</a>`).join(" · ");
