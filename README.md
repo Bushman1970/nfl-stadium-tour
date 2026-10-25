@@ -2,7 +2,7 @@
 
 A single-page family scrapbook tracking our goal: **attend an NFL game at every team's home stadium.**
 
-**Status:** 8 of 32 stadiums visited (25%). The page shows an interactive US map, a progress bar, a memory from every visit, and the stadiums still to go.
+**Status:** 10 of 32 stadiums visited (31%). The page shows an interactive US map, a progress bar, a memory from every visit, and the stadiums still to go.
 
 ## Visited so far
 
@@ -15,11 +15,13 @@ A single-page family scrapbook tracking our goal: **attend an NFL game at every 
 | Dec 24, 2023 | Hard Rock — Miami | Dolphins 22, Cowboys 20 |
 | Oct 13, 2024 | AT&T Stadium — Dallas | Lions 47, Cowboys 9 |
 | Dec 15, 2024 | NRG Stadium — Houston | Texans 20, Dolphins 12 |
+| Nov 2, 2025 | Nissan Stadium — Tennessee | Chargers 27, Titans 20 |
 | Dec 29, 2025 | Mercedes-Benz Stadium — Atlanta | Falcons 27, Rams 24 (Bijan Robinson 195 rush yds, 93-yd TD) |
+| Oct 15, 2026 | Empower Field at Mile High — Denver | Broncos 17, Seahawks 14, OT (Thursday Night Football, beat the defending champs) |
 
 ## How it's built
 
-A single self-contained `index.html` — no build step. The map uses [D3](https://d3js.org) + [TopoJSON](https://github.com/topojson) with the [us-atlas](https://github.com/topojson/us-atlas) topology, loaded from CDN. Game facts were researched in June 2026 (ESPN, NFL.com, Wikipedia, team sites).
+A single self-contained `index.html` — no build step. The map uses [D3](https://d3js.org) + [TopoJSON](https://github.com/topojson) with the [us-atlas](https://github.com/topojson/us-atlas) topology, loaded from CDN. Game facts were researched June–October 2026 (ESPN, NFL.com, Wikipedia, team sites).
 
 To update after a new game: edit the `visited` / `remaining` arrays in `index.html` and bump the progress numbers in the hero. The canonical content lives in the family vault (`wiki/concepts/NFL Stadium Tour.md`).
 
