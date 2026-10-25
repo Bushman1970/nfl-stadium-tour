@@ -105,6 +105,27 @@
   .filterbar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;background:var(--green-soft);border:1px solid #cfe7dc;border-radius:12px;padding:10px 14px;margin:0 0 18px;font-size:14px}
   .filterbar[hidden],.card[hidden]{display:none}
 
+  .photo{position:relative;display:block;width:100%;aspect-ratio:16/10;padding:0;border:0;background:#dfe3ea;cursor:zoom-in;overflow:hidden}
+  .photo img{width:100%;height:100%;object-fit:cover;object-position:center 35%;display:block;transition:transform .4s ease}
+  .photo:hover img{transform:scale(1.03)}
+  .photo:focus-visible{outline:3px solid var(--gold);outline-offset:-3px}
+  .photo .count{position:absolute;right:10px;bottom:10px;background:rgba(12,23,51,.78);color:#fff;font-size:12px;font-weight:600;padding:4px 10px;border-radius:99px;backdrop-filter:blur(4px)}
+
+  #lb{border:0;padding:0;margin:auto;width:100vw;height:100vh;max-width:100vw;max-height:100vh;background:transparent}
+  #lb::backdrop{background:rgba(8,12,24,.97)}
+  #lb .stage{position:relative;width:100%;height:100%;background:rgba(8,12,24,.97);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:56px 16px 20px;gap:12px}
+  #lb img{max-width:calc(100% - 110px);max-height:calc(100vh - 130px);object-fit:contain;border-radius:8px;display:block;user-select:none;-webkit-user-drag:none}
+  #lb .cap{color:#cfd6e6;font-size:14px;text-align:center}
+  #lb .cap b{color:#fff}
+  #lb .lbtn{position:absolute;background:rgba(255,255,255,.12);color:#fff;border:0;border-radius:99px;width:44px;height:44px;font-size:22px;line-height:44px;cursor:pointer;z-index:2}
+  #lb .lbtn:hover{background:rgba(255,255,255,.24)}
+  #lb .lbtn:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+  #lb .close{top:10px;right:12px}
+  #lb .prev{left:12px;top:50%;transform:translateY(-50%)}
+  #lb .next{right:12px;top:50%;transform:translateY(-50%)}
+  #lb .lbtn[hidden]{display:none}
+  @media(max-width:560px){#lb .prev,#lb .next{top:auto;bottom:14px;transform:none}#lb .stage{padding-bottom:70px}#lb img{max-width:100%;max-height:calc(100vh - 170px)}}
+
   footer{background:var(--navy);color:#aeb9d4;padding:30px 0 40px;font-size:13px;text-align:center}
   footer a{color:#8fd3b8}
   footer .src{max-width:780px;margin:10px auto 0;line-height:1.9}
@@ -169,6 +190,16 @@
   </div>
 </section>
 
+<dialog id="lb" aria-label="Game photos">
+  <div class="stage">
+    <button class="lbtn close" id="lb-close" aria-label="Close photos">✕</button>
+    <button class="lbtn prev" id="lb-prev" aria-label="Previous photo">‹</button>
+    <img id="lb-img" alt="">
+    <div class="cap" id="lb-cap"></div>
+    <button class="lbtn next" id="lb-next" aria-label="Next photo">›</button>
+  </div>
+</dialog>
+
 <footer>
   <div class="wrap">
     Made for the Bush family · Game facts researched June–October 2026 (ESPN, NFL.com, Wikipedia, team sites).
@@ -180,34 +211,34 @@
 <script src="https://cdn.jsdelivr.net/npm/topojson-client@3"></script>
 <script>
 const visited = [
-  {team:"Jacksonville Jaguars", stadium:"EverBank Field", city:"Jacksonville, FL", date:"Oct 26, 2014", score:"Dolphins 27, Jaguars 13", lon:-81.6376, lat:30.3239, badge:"Where it started",
+  {team:"Jacksonville Jaguars", code:"jax", photos:3, stadium:"EverBank Field", city:"Jacksonville, FL", date:"Oct 26, 2014", score:"Dolphins 27, Jaguars 13", lon:-81.6376, lat:30.3239, badge:"Where it started",
    moment:"Rookie #3 overall pick Blake Bortles threw two pick-sixes (81 and 22 yards) — the first quarterback since Geno Smith to give up two in one game. RB Denard Robinson's 108 rushing yards was the bright spot.",
    season:"The Jaguars went 3–13, deep in a rebuild under Gus Bradley. It was the “before” picture of the Bortles–Robinson–Hurns core that nearly reached the Super Bowl three years later."},
-  {team:"Pittsburgh Steelers", stadium:"Heinz Field", city:"Pittsburgh, PA", date:"Oct 10, 2021", score:"Steelers 27, Broncos 19", lon:-80.0157, lat:40.4468, badge:"Levi's 15th 🎂",
+  {team:"Pittsburgh Steelers", code:"pit", photos:4, stadium:"Heinz Field", city:"Pittsburgh, PA", date:"Oct 10, 2021", score:"Steelers 27, Broncos 19", lon:-80.0157, lat:40.4468, badge:"Levi's 15th 🎂",
    moment:"Rookie Najee Harris broke out (122 yards, TD) and Ben Roethlisberger, in his farewell season, had one of his cleanest games (253 yards, 2 TD, 0 INT). James Pierre sealed it with a late end-zone interception.",
    season:"Pittsburgh finished 9–7–1 and snuck into the playoffs for Big Ben's final ride, ending in a first-round loss at Kansas City."},
-  {team:"Tampa Bay Buccaneers", stadium:"Raymond James Stadium", city:"Tampa, FL", date:"Oct 9, 2022", score:"Buccaneers 21, Falcons 15", lon:-82.5033, lat:27.9759, badge:"Saw the GOAT",
+  {team:"Tampa Bay Buccaneers", code:"tb", photos:3, stadium:"Raymond James Stadium", city:"Tampa, FL", date:"Oct 9, 2022", score:"Buccaneers 21, Falcons 15", lon:-82.5033, lat:27.9759, badge:"Saw the GOAT",
    moment:"Tom Brady, in his final NFL season, threw for 351 yards and Leonard Fournette scored both touchdowns. The game ended on one of the most-debated calls of 2022 — a roughing-the-passer flag on Atlanta's Grady Jarrett that let Tampa run out the clock.",
    season:"An odd year: 8–9, yet still good enough to win the NFC South and host a playoff game. Brady set the single-season completions record (490) and retired that February."},
-  {team:"Chicago Bears", stadium:"Soldier Field", city:"Chicago, IL", date:"Oct 15, 2023", score:"Vikings 19, Bears 13", lon:-87.6167, lat:41.8623, badge:"Historic Soldier Field",
+  {team:"Chicago Bears", code:"chi", photos:3, stadium:"Soldier Field", city:"Chicago, IL", date:"Oct 15, 2023", score:"Vikings 19, Bears 13", lon:-87.6167, lat:41.8623, badge:"Historic Soldier Field",
    moment:"A gritty NFC North grind on the Chicago lakefront. The turning point: Bears QB Justin Fields dislocated his throwing thumb on a Danielle Hunter sack, opening the door for undrafted Division-II rookie Tyson Bagent to make his NFL debut.",
    season:"Chicago went 7–10 and finished last in the division — but a clear step up from the prior year's 3–14, with the rebuild starting to find its footing."},
-  {team:"Miami Dolphins", stadium:"Hard Rock Stadium", city:"Miami Gardens, FL", date:"Dec 24, 2023", score:"Dolphins 22, Cowboys 20", lon:-80.2389, lat:25.9580, badge:"Christmas Eve walk-off 🎄",
+  {team:"Miami Dolphins", code:"mia", photos:2, stadium:"Hard Rock Stadium", city:"Miami Gardens, FL", date:"Dec 24, 2023", score:"Dolphins 22, Cowboys 20", lon:-80.2389, lat:25.9580, badge:"Christmas Eve walk-off 🎄",
    moment:"A Christmas Eve walk-off. Kicker Jason Sanders went a perfect 5-for-5, including a 57-yard career long, and drilled the game-winner as time expired to beat a 10-win Cowboys team and clinch a playoff spot.",
    season:"Miami finished 11–6 with a high-flying Mike McDaniel offense, then lost in the wild-card round at Kansas City in one of the coldest games in NFL history."},
-  {team:"Dallas Cowboys", stadium:"AT&T Stadium", city:"Arlington, TX", date:"Oct 13, 2024", score:"Lions 47, Cowboys 9", lon:-97.0945, lat:32.7473, badge:"Jerry World",
+  {team:"Dallas Cowboys", code:"dal", photos:3, stadium:"AT&T Stadium", city:"Arlington, TX", date:"Oct 13, 2024", score:"Lions 47, Cowboys 9", lon:-97.0945, lat:32.7473, badge:"Jerry World",
    moment:"The visiting Lions rolled 47–9, the worst Dallas home loss since 1988. But the moment that stuck was a frightening one: Lions star edge rusher Aidan Hutchinson — leading the NFL in pressures — snapped his lower leg while sacking Dak Prescott, his leg clipping teammate Alim McNeill. He was carted off, had surgery that night, and was lost for the rest of the regular season.",
    season:"A disappointing 7–10 for Dallas, with Dak Prescott himself later lost to a season-ending injury — while the Lions powered on to the NFC's #1 seed at 15–2."},
-  {team:"Houston Texans", stadium:"NRG Stadium", city:"Houston, TX", date:"Dec 15, 2024", score:"Texans 20, Dolphins 12", lon:-95.4107, lat:29.6847, badge:"Back-to-back champs",
+  {team:"Houston Texans", code:"hou", photos:3, stadium:"NRG Stadium", city:"Houston, TX", date:"Dec 15, 2024", score:"Texans 20, Dolphins 12", lon:-95.4107, lat:29.6847, badge:"Back-to-back champs",
    moment:"A defensive clinic — cornerback Derek Stingley Jr. intercepted Tua Tagovailoa twice in the fourth quarter, capping a four-takeaway day, to help clinch back-to-back AFC South titles.",
    season:"Houston went 10–7, won the division, beat the Chargers 32–12 in the wild-card round, and lost a divisional-round game to the Chiefs."},
-  {team:"Tennessee Titans", stadium:"Nissan Stadium", city:"Nashville, TN", date:"Nov 2, 2025", score:"Chargers 27, Titans 20", lon:-86.7713, lat:36.1665, badge:"Fast start, tough finish",
+  {team:"Tennessee Titans", code:"ten", photos:3, stadium:"Nissan Stadium", city:"Nashville, TN", date:"Nov 2, 2025", score:"Chargers 27, Titans 20", lon:-86.7713, lat:36.1665, badge:"Fast start, tough finish",
    moment:"A wild first quarter — the Titans scored twice before their offense did anything. Cody Barton picked off Justin Herbert on the Chargers' second snap and ran it back 24 yards, then Chimere Dike broke a 67-yard punt-return touchdown (Tennessee's first since 2012) for a 14–7 lead. The defense sacked Herbert six times and the Chargers lost both starting tackles — but Herbert answered with 250 yards, two TD throws, and a baseball-slide rushing score, including a back-breaking 99-yard drive after Tony Pollard was stuffed at the LA one.",
    season:"A 3–14 wreck and a 1–11 start — the franchise's worst since the 1994 Houston Oilers, with coach Brian Callahan fired at 1–5. The bright spot was rookie #1 overall pick Cam Ward, who broke Marcus Mariota's franchise rookie passing record (3,117 yards)."},
-  {team:"Atlanta Falcons", stadium:"Mercedes-Benz Stadium", city:"Atlanta, GA", date:"Dec 29, 2025", score:"Falcons 27, Rams 24", lon:-84.4009, lat:33.7554, badge:"Newest stadium",
+  {team:"Atlanta Falcons", code:"atl", photos:2, stadium:"Mercedes-Benz Stadium", city:"Atlanta, GA", date:"Dec 29, 2025", score:"Falcons 27, Rams 24", lon:-84.4009, lat:33.7554, badge:"Newest stadium",
    moment:"A Monday Night Football thriller. Bijan Robinson stole the show with 195 rushing yards, including a 93-yard touchdown, as Atlanta raced to a 21–0 halftime lead. The Rams clawed all the way back to tie it 24–24 late (Matthew Stafford to Puka Nacua), but kicker Zane Gonzalez answered with a 51-yard field goal to win it.",
    season:"Atlanta finished 8–9 — a 3–2 start, a 1–7 collapse, then four straight wins to close (this was win #3 of that run) — but missed the playoffs for an eighth straight year. Coach Raheem Morris was fired after the finale, while Bijan Robinson set a franchise single-season scrimmage-yards record."},
-  {team:"Denver Broncos", stadium:"Empower Field at Mile High", city:"Denver, CO", date:"Oct 15, 2026", score:"Broncos 17, Seahawks 14 (OT)", lon:-105.0201, lat:39.7439, badge:"Beat the champs in OT 🏔️",
+  {team:"Denver Broncos", code:"den", photos:4, stadium:"Empower Field at Mile High", city:"Denver, CO", date:"Oct 15, 2026", score:"Broncos 17, Seahawks 14 (OT)", lon:-105.0201, lat:39.7439, badge:"Beat the champs in OT 🏔️",
    moment:"Thursday Night Football against the defending Super Bowl champion Seahawks — and the tour's first overtime game. Denver led 14–3 at the half on short TD runs by J.K. Dobbins and RJ Harvey. Seattle stormed back with 11 points in the last six minutes, tying it on a Jason Myers field goal with 3 seconds left. In overtime, Ja'Quan McMillian picked off Sam Darnold on third-and-7, and four plays later Wil Lutz drilled a 53-yard field goal to win it. The Broncos defense sacked Darnold five times, hit him 17 times, and forced three turnovers, including Nik Bonitto's punch-out fumble.",
    season:"Still being written. The win moved Denver to 4–2 (3–0 at home, 4–0 in one-score games) and dropped Seattle to 3–3, snapping the Seahawks' seven-game prime-time winning streak. A nice full circle: the Broncos were also the visiting team at our Pittsburgh game in 2021."}
 ];
@@ -271,6 +302,10 @@ document.getElementById("cards").innerHTML = visited.map(v => `
       <p class="stadium">${v.stadium}</p>
       <p class="teamcity">${v.team} · ${v.city}</p>
     </div>
+    <button class="photo" data-team="${v.team}" aria-label="Open ${v.photos} photos from ${v.stadium}">
+      <img src="photos/${v.code}-1-sm.jpg" srcset="photos/${v.code}-1-sm.jpg 800w, photos/${v.code}-1.jpg 1600w" sizes="(min-width:720px) 500px, 100vw" alt="Our family at ${v.stadium}, ${v.date}" loading="lazy" decoding="async">
+      <span class="count">📷 ${v.photos} photos</span>
+    </button>
     <div class="body">
       <div class="scoreline"><span class="score">${v.score}</span><span class="date">${v.date}</span></div>
       <div class="blk"><h4>The moment</h4><p>${v.moment}</p></div>
@@ -345,6 +380,36 @@ segBtns.forEach(b=>b.addEventListener("click",()=>setView(b.dataset.view)));
 let savedView = "both";
 try{ savedView = localStorage.getItem("tourView") || "both"; }catch(e){}
 setView(savedView);
+
+// Photo viewer
+const lb = document.getElementById("lb"), lbImg = document.getElementById("lb-img");
+let lbGame = null, lbIdx = 0;
+function lbShow(){
+  const v = lbGame, n = v.photos;
+  lbImg.src = `photos/${v.code}-${lbIdx+1}.jpg`;
+  lbImg.alt = `Photo ${lbIdx+1} of ${n} from ${v.stadium}, ${v.date}`;
+  document.getElementById("lb-cap").innerHTML = `<b>${v.stadium}</b> · ${v.date} · ${lbIdx+1} of ${n}`;
+  document.getElementById("lb-prev").hidden = document.getElementById("lb-next").hidden = n<2;
+  if(n>1) new Image().src = `photos/${v.code}-${(lbIdx+1)%n+1}.jpg`;   // warm the next one
+}
+function lbStep(d){ lbIdx = (lbIdx + d + lbGame.photos) % lbGame.photos; lbShow(); }
+document.getElementById("cards").addEventListener("click",e=>{
+  const b = e.target.closest(".photo");
+  if(!b) return;
+  lbGame = visitedBy[b.dataset.team]; lbIdx = 0; lbShow(); lb.showModal();
+});
+document.getElementById("lb-prev").addEventListener("click",()=>lbStep(-1));
+document.getElementById("lb-next").addEventListener("click",()=>lbStep(1));
+document.getElementById("lb-close").addEventListener("click",()=>lb.close());
+lb.addEventListener("click",e=>{ if(e.target===lb || e.target.classList.contains("stage")) lb.close(); });
+lb.addEventListener("keydown",e=>{ if(e.key==="ArrowRight") lbStep(1); if(e.key==="ArrowLeft") lbStep(-1); });
+let touchX = null;
+lb.addEventListener("touchstart",e=>{ touchX = e.touches[0].clientX; },{passive:true});
+lb.addEventListener("touchend",e=>{
+  if(touchX===null) return;
+  const dx = e.changedTouches[0].clientX - touchX; touchX = null;
+  if(Math.abs(dx)>40 && lbGame.photos>1) lbStep(dx<0?1:-1);
+});
 
 // Sources
 document.getElementById("srclist").innerHTML = "Sources: " + sources.map(s=>`<a href="${s[1]}" target="_blank" rel="noopener">${s[0]}</a>`).join(" · ");

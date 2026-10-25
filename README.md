@@ -2,7 +2,7 @@
 
 A single-page family scrapbook tracking our goal: **attend an NFL game at every team's home stadium.**
 
-**Status:** 10 of 32 stadiums visited (31%). The page shows an interactive US map, a progress bar, a team checklist grouped by AFC (red) and NFC (blue) divisions, with a Map / Checklist / Both switch, a memory from every visit, and the stadiums still to go. Tapping a visited stadium on the map, or a checked team in the checklist, filters the memories to that game.
+**Status:** 10 of 32 stadiums visited (31%). The page shows an interactive US map, a progress bar, a team checklist grouped by AFC (red) and NFC (blue) divisions, with a Map / Checklist / Both switch, a memory and family photos from every visit (tap a photo for the full-screen viewer), and the stadiums still to go. Tapping a visited stadium on the map, or a checked team in the checklist, filters the memories to that game.
 
 ## Visited so far
 
