@@ -2,7 +2,7 @@
 
 A single-page family scrapbook tracking our goal: **attend an NFL game at every team's home stadium.**
 
-**Status:** 10 of 32 stadiums visited (31%). The page shows an interactive US map, a progress bar, a memory from every visit, and the stadiums still to go.
+**Status:** 10 of 32 stadiums visited (31%). The page shows an interactive US map, a progress bar, a show/hide team checklist grouped by AFC and NFC divisions, a memory from every visit, and the stadiums still to go. Tapping a visited stadium on the map, or a checked team in the checklist, filters the memories to that game.
 
 ## Visited so far
 
@@ -23,6 +23,6 @@ A single-page family scrapbook tracking our goal: **attend an NFL game at every 
 
 A single self-contained `index.html` — no build step. The map uses [D3](https://d3js.org) + [TopoJSON](https://github.com/topojson) with the [us-atlas](https://github.com/topojson/us-atlas) topology, loaded from CDN. Game facts were researched June–October 2026 (ESPN, NFL.com, Wikipedia, team sites).
 
-To update after a new game: edit the `visited` / `remaining` arrays in `index.html` and bump the progress numbers in the hero. The canonical content lives in the family vault (`wiki/concepts/NFL Stadium Tour.md`).
+To update after a new game: edit the `visited` / `remaining` arrays in `index.html` (team names must match the `divisions` list) and bump the progress numbers in the hero. The canonical content lives in the family vault (`wiki/concepts/NFL Stadium Tour.md`).
 
 Published with GitHub Pages.

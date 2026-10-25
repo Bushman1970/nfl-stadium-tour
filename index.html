@@ -71,6 +71,31 @@
   .rchip b{font-size:14px;font-weight:600;color:var(--ink);display:block}
   .rchip span{font-size:12px;color:var(--muted)}
 
+  .btn{font:inherit;font-size:14px;font-weight:600;color:var(--navy);background:var(--card);border:1px solid var(--line);border-radius:99px;padding:8px 16px;cursor:pointer}
+  .btn:hover{border-color:var(--green);color:var(--green)}
+  .btn:focus-visible,.trow:focus-visible{outline:2px solid var(--green);outline-offset:2px}
+  #matrix{margin-top:18px}
+  #matrix[hidden]{display:none}
+  .confs{display:grid;grid-template-columns:1fr;gap:18px}
+  @media(min-width:860px){.confs{grid-template-columns:1fr 1fr}}
+  .conf{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px 18px}
+  .conf h3{margin:0 0 12px;font-size:17px;color:var(--navy);display:flex;justify-content:space-between;align-items:baseline}
+  .conf h3 span{font-size:13px;font-weight:500;color:var(--muted)}
+  .divs{display:grid;grid-template-columns:1fr 1fr;gap:14px 18px}
+  @media(max-width:480px){.divs{grid-template-columns:1fr}}
+  .div h4{margin:0 0 6px;font-size:12px;letter-spacing:.5px;text-transform:uppercase;color:var(--gold);font-weight:700}
+  .trow{display:flex;align-items:center;gap:9px;width:calc(100% + 12px);padding:5px 6px;margin:0 -6px;border:0;border-radius:8px;background:none;font:inherit;text-align:left;color:var(--ink)}
+  button.trow{cursor:pointer}
+  button.trow:hover{background:var(--green-soft)}
+  .box{flex:none;width:18px;height:18px;border-radius:5px;border:2px solid var(--gray);display:inline-flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;line-height:1}
+  .trow.done .box{background:var(--green);border-color:var(--green);color:#fff}
+  .trow .tname{font-size:14px;flex:1;min-width:0}
+  .trow.todo .tname{color:var(--muted)}
+  .trow .tdate{font-size:12px;color:var(--muted);white-space:nowrap}
+
+  .filterbar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;background:var(--green-soft);border:1px solid #cfe7dc;border-radius:12px;padding:10px 14px;margin:0 0 18px;font-size:14px}
+  .filterbar[hidden],.card[hidden]{display:none}
+
   footer{background:var(--navy);color:#aeb9d4;padding:30px 0 40px;font-size:13px;text-align:center}
   footer a{color:#8fd3b8}
   footer .src{max-width:780px;margin:10px auto 0;line-height:1.9}
@@ -93,7 +118,7 @@
 <section id="map-section">
   <div class="wrap">
     <h2>The map</h2>
-    <p class="lead">Green is done, gray is still on the list. Hover a stadium for the matchup.</p>
+    <p class="lead">Green is done, gray is still on the list. Tap a green stadium to see its memory.</p>
     <div id="map-wrap">
       <div id="map" style="width:100%"></div>
       <div class="legend">
@@ -105,10 +130,23 @@
   </div>
 </section>
 
+<section id="checklist" style="padding-top:0">
+  <div class="wrap">
+    <h2>The checklist</h2>
+    <p class="lead">Every team by conference and division. Tap a checked team to see its memory.</p>
+    <button class="btn" id="matrix-toggle" aria-expanded="false" aria-controls="matrix">Show team checklist</button>
+    <div id="matrix" hidden></div>
+  </div>
+</section>
+
 <section id="memories">
   <div class="wrap">
     <h2>The memories</h2>
     <p class="lead">One moment worth retelling from every visit, in the order we saw them.</p>
+    <div class="filterbar" id="filterbar" hidden>
+      <span id="filtertext"></span>
+      <button class="btn" id="showall">Show all memories</button>
+    </div>
     <div class="cards" id="cards"></div>
   </div>
 </section>
@@ -202,9 +240,22 @@ const sources = [
   ["Broncos/Seahawks 2026","https://www.espn.com/nfl/recap/_/gameId/401872995"]
 ];
 
+const divisions = {
+  AFC:{East:["Buffalo Bills","Miami Dolphins","New England Patriots","New York Jets"],
+       North:["Baltimore Ravens","Cincinnati Bengals","Cleveland Browns","Pittsburgh Steelers"],
+       South:["Houston Texans","Indianapolis Colts","Jacksonville Jaguars","Tennessee Titans"],
+       West:["Denver Broncos","Kansas City Chiefs","Las Vegas Raiders","Los Angeles Chargers"]},
+  NFC:{East:["Dallas Cowboys","New York Giants","Philadelphia Eagles","Washington Commanders"],
+       North:["Chicago Bears","Detroit Lions","Green Bay Packers","Minnesota Vikings"],
+       South:["Atlanta Falcons","Carolina Panthers","New Orleans Saints","Tampa Bay Buccaneers"],
+       West:["Arizona Cardinals","Los Angeles Rams","San Francisco 49ers","Seattle Seahawks"]}
+};
+const confNames = {AFC:"American Football Conference", NFC:"National Football Conference"};
+const visitedBy = Object.fromEntries(visited.map(v=>[v.team,v]));
+
 // Memory cards
 document.getElementById("cards").innerHTML = visited.map(v => `
-  <article class="card">
+  <article class="card" data-team="${v.team}">
     <div class="top">
       <span class="badge">${v.badge}</span>
       <p class="stadium">${v.stadium}</p>
@@ -224,6 +275,53 @@ document.getElementById("remaining").innerHTML = remaining
   + `<div class="rchip"><b>Los Angeles Rams</b><span>SoFi Stadium · Inglewood, CA</span></div>`
   + `<div class="rchip"><b>New York Jets</b><span>MetLife Stadium · East Rutherford, NJ</span></div>`;
 
+// Filter memories to one game (from the map or the checklist)
+const cardEls = [...document.querySelectorAll("#cards .card")];
+const filterbar = document.getElementById("filterbar");
+let selected = null;
+let onSelect = ()=>{};   // the map hooks in here once it loads
+function selectTeam(team){
+  const v = visitedBy[team];
+  if(!v) return;
+  selected = team;
+  cardEls.forEach(c=>{c.hidden = c.dataset.team!==team;});
+  document.getElementById("filtertext").innerHTML = `Showing <b>${v.stadium}</b> · ${v.team}, ${v.date}`;
+  filterbar.hidden = false;
+  onSelect();
+  document.getElementById("memories").scrollIntoView({behavior:"smooth"});
+}
+document.getElementById("showall").addEventListener("click",()=>{
+  selected = null;
+  cardEls.forEach(c=>{c.hidden = false;});
+  filterbar.hidden = true;
+  onSelect();
+});
+
+// Team checklist by conference and division
+const matrix = document.getElementById("matrix");
+matrix.innerHTML = `<div class="confs">` + Object.entries(divisions).map(([conf,divs])=>{
+  const done = Object.values(divs).flat().filter(t=>visitedBy[t]).length;
+  return `<div class="conf"><h3>${confNames[conf]} <span>${done} of 16</span></h3><div class="divs">`
+    + Object.entries(divs).map(([name,teams])=>`<div class="div"><h4>${conf} ${name}</h4>`
+      + teams.map(t=>{
+          const v = visitedBy[t];
+          return v
+            ? `<button class="trow done" data-team="${t}" aria-label="${t}, visited ${v.date}. See the memory."><span class="box" aria-hidden="true">✓</span><span class="tname">${t}</span><span class="tdate">${v.date}</span></button>`
+            : `<div class="trow todo" aria-label="${t}, not yet"><span class="box" aria-hidden="true"></span><span class="tname">${t}</span><span class="tdate">to go</span></div>`;
+        }).join("") + `</div>`).join("")
+    + `</div></div>`;
+}).join("") + `</div>`;
+matrix.addEventListener("click",e=>{
+  const b = e.target.closest("button.trow");
+  if(b) selectTeam(b.dataset.team);
+});
+const toggle = document.getElementById("matrix-toggle");
+toggle.addEventListener("click",()=>{
+  matrix.hidden = !matrix.hidden;
+  toggle.setAttribute("aria-expanded", String(!matrix.hidden));
+  toggle.textContent = matrix.hidden ? "Show team checklist" : "Hide team checklist";
+});
+
 // Sources
 document.getElementById("srclist").innerHTML = "Sources: " + sources.map(s=>`<a href="${s[1]}" target="_blank" rel="noopener">${s[0]}</a>`).join(" · ");
 
@@ -233,7 +331,7 @@ document.getElementById("srclist").innerHTML = "Sources: " + sources.map(s=>`<a 
   const tipDefault = tip.textContent;
   const svg = d3.select("#map").append("svg")
     .attr("viewBox","0 0 900 540").attr("width","100%")
-    .attr("role","img").attr("aria-label","Map of the United States showing 10 visited NFL stadiums and 22 remaining");
+    .attr("role","group").attr("aria-label","Map of the United States showing 10 visited NFL stadiums and 22 remaining");
   const projection = d3.geoAlbersUsa().scale(1120).translate([450,270]);
   const path = d3.geoPath(projection);
 
@@ -242,24 +340,36 @@ document.getElementById("srclist").innerHTML = "Sources: " + sources.map(s=>`<a 
       .data(topojson.feature(us, us.objects.states).features).join("path")
       .attr("d",path).attr("fill","#e8eaee").attr("stroke","#fff").attr("stroke-width",0.8);
 
+    const say = (d,isV)=>`<b style="color:#1a2233">${d.team}</b> · ${d.stadium}` + (isV?` — ${d.score} (${d.date})`:` — not yet`);
     function plot(arr, isV){
-      svg.append("g").selectAll("circle").data(arr).join("circle")
+      return svg.append("g").selectAll("circle").data(arr).join("circle")
         .attr("cx",d=>{const p=projection([d.lon,d.lat]);return p?p[0]+(d.dx||0):-100;})
         .attr("cy",d=>{const p=projection([d.lon,d.lat]);return p?p[1]:-100;})
         .attr("r",isV?7:5)
         .attr("fill",isV?"#1b7f5a":"#fff")
         .attr("stroke",isV?"#fff":"#9aa0a6")
         .attr("stroke-width",isV?1.5:1.5)
-        .style("cursor","pointer")
+        .style("cursor",isV?"pointer":"default")
         .on("mouseenter mousemove",function(e,d){
           d3.select(this).attr("r",isV?9:7);
-          tip.innerHTML = `<b style="color:#1a2233">${d.team}</b> · ${d.stadium}` + (isV?` — ${d.score} (${d.date})`:` — not yet`);
+          tip.innerHTML = say(d,isV);
         })
-        .on("mouseleave",function(){d3.select(this).attr("r",isV?7:5);tip.innerHTML=tipDefault;})
-        .append("title").text(d=>`${d.team} — ${d.stadium}${isV?" ✓":""}`);
+        .on("mouseleave",function(e,d){d3.select(this).attr("r",isV?(d.team===selected?10:7):5);tip.innerHTML=tipDefault;})
+        .on("click",(e,d)=>{ if(isV) selectTeam(d.team); else tip.innerHTML = say(d,false); });
     }
-    plot(remaining,false);
-    plot(visited,true);
+    plot(remaining,false).append("title").text(d=>`${d.team} — ${d.stadium}`);
+    const dots = plot(visited,true)
+      .attr("tabindex",0).attr("role","button")
+      .attr("aria-label",d=>`${d.team}, ${d.stadium}, ${d.score}, ${d.date}. See the memory.`)
+      .on("keydown",(e,d)=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); selectTeam(d.team); } });
+    dots.append("title").text(d=>`${d.team} — ${d.stadium} ✓`);
+    onSelect = ()=>{
+      dots.attr("r",d=>d.team===selected?10:7)
+        .attr("stroke",d=>d.team===selected?"#c9a23b":"#fff")
+        .attr("stroke-width",d=>d.team===selected?3:1.5);
+      if(selected) dots.filter(d=>d.team===selected).raise();
+    };
+    onSelect();
   }).catch(()=>{document.getElementById("map").innerHTML='<p style="text-align:center;color:#5b6577;padding:20px">Map could not load — the memories below tell the whole story.</p>';});
 })();
 </script>
